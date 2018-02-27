@@ -15,8 +15,6 @@ import java.net.URI;
 import java.security.cert.CertificateException;
 
 public class TestRestUsingHttpClient {
-//private String client;
-
     public static void main(String[] args) {
         try {
           //  createRestConnection();
@@ -68,8 +66,5 @@ public class TestRestUsingHttpClient {
         {
             e.printStackTrace();
         }
-
    }
-
-
 }
