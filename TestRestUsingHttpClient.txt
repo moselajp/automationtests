@@ -1,0 +1,75 @@
+package za.co.absa.automation.resttesting.testing;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.ssl.SSLContextBuilder;
+
+import javax.net.ssl.SSLContext;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URI;
+import java.security.cert.CertificateException;
+
+public class TestRestUsingHttpClient {
+//private String client;
+
+    public static void main(String[] args) {
+        try {
+          //  createRestConnection();
+            SSLContext sslContext = new SSLContextBuilder()
+                    .loadTrustMaterial(null, (certificate, authType) -> true).build();
+
+            CloseableHttpClient client = HttpClients.custom()
+                    .setSslcontext(sslContext)
+                    .setSSLHostnameVerifier(new NoopHostnameVerifier())
+                    .build();
+            HttpGet getRequest = new HttpGet("http://restcountries.eu/rest/v1/name/rsa");
+            getRequest.addHeader("accept", "application/json");
+            HttpResponse response = client.execute(getRequest);
+            if (response.getStatusLine().getStatusCode() != 200) {
+                throw new RuntimeException("Failed : HTTP error code : "
+                        + response.getStatusLine().getStatusCode());
+            }
+
+            BufferedReader br = new BufferedReader(new InputStreamReader((response.getEntity().getContent())));
+
+            String output;
+            System.out.println("Output from Server .... \n");
+            while ((output = br.readLine()) != null) {
+                System.out.println(output);
+            }
+
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        }
+          catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        //client.getConnectionManager().shutdown();
+    }
+
+    public void createRestConnection() throws Exception {
+         try
+         {
+            SSLContext sslContext = new SSLContextBuilder()
+                    .loadTrustMaterial(null, (certificate, authType) -> true).build();
+
+            CloseableHttpClient client = HttpClients.custom()
+                    .setSslcontext(sslContext)
+                    .setSSLHostnameVerifier(new NoopHostnameVerifier())
+                    .build();
+            //return client;
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+   }
+
+
+}
